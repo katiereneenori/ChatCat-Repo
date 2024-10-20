@@ -1,0 +1,13 @@
+table.dataframe {
+    width: 100%;
+    border-collapse: collapse;
+}
+table.dataframe th, table.dataframe td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+table.dataframe tr:nth-child(even){background-color: #f2f2f2;}
+table.dataframe th {
+    background-color: grey;
+    color: white;
+}
