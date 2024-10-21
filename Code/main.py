@@ -12,9 +12,9 @@ MYSQL_PASSWORD='password'
 MYSQL_DATABASE = 'chatcatdb'
 
 def get_conn_cur():
-    cnx = mysql.connector.connect(user=MYSQL_USERNAME, password=MYSQL_PASSWORD,
-    host=MYSQL_ADDRESS,
-    database=MYSQL_DATABASE, port='3306')
+    cnx = mysql.connector.connect(  user=MYSQL_USERNAME, password=MYSQL_PASSWORD,
+                                    host=MYSQL_ADDRESS, database=MYSQL_DATABASE, 
+                                    port='3306')
     return (cnx, cnx.cursor())
 
 def run_query(query_string):
@@ -24,13 +24,22 @@ def run_query(query_string):
 
     my_data = cur.fetchall() # fetch query data as before
 
-    result_df = pd.DataFrame(my_data, columns=cur.column_names)
-
+    # Fetch the column names from the cursor
+    columns = cur.column_names
+    result_df = pd.DataFrame(my_data, columns=columns)  # Use the column names
 
     cur.close() # close
     conn.close() # close
 
     return result_df
+
+def get_table_names():
+    conn, cur = get_conn_cur()
+    cur.execute("SHOW TABLES")
+    tables = [table[0] for table in cur.fetchall()]
+    cur.close()
+    conn.close()
+    return tables
 
 def sql_head(self, table_name):
     conn, cur = self.get_conn_cur()
@@ -60,7 +69,8 @@ def sql_head(self, table_name):
 
 @app.route('/')
 def start():
-    return render_template('home.html')
+    tables = get_table_names()  # Fetch available table names
+    return render_template('home.html', tables=tables)
 
 @app.route('/table', methods=['POST'])
 def table():
@@ -71,4 +81,11 @@ def table():
     return render_template('table.html', table_html=table_html)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)
+
+
+
+
+
+
+
