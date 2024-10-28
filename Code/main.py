@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 import mysql.connector
 import pandas as pd
+from textblob import TextBlob
 
 app = Flask(__name__)
 app.secret_key = '345543a3-53b0-43bb-1253-1f4aab3a2a3e'
