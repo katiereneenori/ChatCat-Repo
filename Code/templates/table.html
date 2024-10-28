@@ -4,11 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
-    <title>ChatCat Table</title>
+    <title>Table Data</title>
 </head>
 <body>
-    <div>
-        {{table_html|safe}}
+    <div class="container">
+        <h1>Table Data</h1>
+        <div class="table-container">
+            {{ table_html | safe }}
+        </div>
+        <a href="/" class="back-button">Back to home</a>
     </div>
 </body>
 </html>
