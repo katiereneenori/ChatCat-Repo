@@ -7,16 +7,20 @@
     <title>ChatCat Home</title>
 </head>
 <body>
-    <form action="/table" method="POST">
-        <h2>Database Viewer</h2>
-        <input type="text" id="table_name" name="table_name" placeholder="Enter Table Name" required>
-        <input type="submit" value="Find Table">
-        <h3>Available Tables:</h3>
-        <ul>
-            {% for table in tables %}
-            <li>{{ table }}</li>
-            {% endfor %}
-        </ul>
-    </form>
+    <div class="container">
+        <form action="/table" method="POST" class="form-container">
+            <h2>Database Viewer</h2>
+            <label for="table_name">Enter Table Name:</label>
+            <input type="text" id="table_name" name="table_name" placeholder="Enter Table Name" required>
+            <input type="submit" value="Find Table">
+            
+            <h3>Available Tables:</h3>
+            <ul>
+                {% for table in tables %}
+                <li>{{ table }}</li>
+                {% endfor %}
+            </ul>
+        </form>
+    </div>
 </body>
 </html>
