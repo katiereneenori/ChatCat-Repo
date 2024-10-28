@@ -12,6 +12,25 @@ MYSQL_USERNAME='admin'
 MYSQL_PASSWORD='password'
 MYSQL_DATABASE = 'chatcatdb'
 
+#textblob test
+    # Example: Analyze user input sentiment
+    # from textblob import TextBlob
+    # 
+    # def analyze_sentiment(user_input):
+    #     blob = TextBlob(user_input)
+    #     sentiment = blob.sentiment
+    #     if sentiment.polarity > 0:
+    #         return "Positive sentiment"
+    #     elif sentiment.polarity < 0:
+    #         return "Negative sentiment"
+    #     else:
+    #        return "Neutral sentiment"
+    
+    # User input
+    text = input("Enter a sentence: ")
+    print(analyze_sentiment(text))
+
+
 def get_conn_cur():
     cnx = mysql.connector.connect(  user=MYSQL_USERNAME, password=MYSQL_PASSWORD,
                                     host=MYSQL_ADDRESS, database=MYSQL_DATABASE, 
