@@ -1,98 +1,103 @@
-/* style.css */
+/* General body styling */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    background-color: #f0f4f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
     margin: 0;
     padding: 0;
 }
 
 .container {
-    width: 80%;
-    margin: 50px auto;
-    background: white;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-}
-
-h1, h2, h3 {
-    text-align: center;
-    color: #333;
-}
-
-.form-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    gap: 20px; /* Space between forms */
 }
 
-input[type="text"] {
-    width: 80%;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 4px;
-    border: 1px solid #ccc;
+/* Form container styling */
+form {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
 }
 
+/* Button styling */
 input[type="submit"] {
-    background-color: #5cb85c;
+    background-color: #007bff;
     color: white;
     padding: 10px 20px;
     border: none;
-    border-radius: 4px;
+    border-radius: 25px;
     cursor: pointer;
+    font-size: 16px;
     transition: background-color 0.3s ease;
 }
 
 input[type="submit"]:hover {
-    background-color: #4cae4c;
+    background-color: #0056b3;
 }
 
-ul {
+/* Textarea styling for sentiment analysis */
+textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    resize: vertical;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* Styling for sentiment results */
+.sentiment-result {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #e9ecef;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    text-align: left;
+    font-size: 14px;
+}
+
+/* List styling */
+ul.table-list {
     list-style-type: none;
     padding: 0;
+    margin-top: 20px;
 }
 
-ul li {
-    background-color: #eee;
-    margin: 5px 0;
-    padding: 10px;
-    border-radius: 4px;
+ul.table-list li {
+    background-color: #e9ecef;
+    padding: 12px;
+    margin: 6px 0;
+    border-radius: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.table-container {
-    margin: 20px 0;
-    overflow-x: auto;
+ul.table-list li:hover {
+    background-color: #dfe3e8;
+    transform: translateY(-2px);
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    form {
+        width: 95%;
+    }
 
-table, th, td {
-    border: 1px solid #ddd;
-}
+    input[type="submit"] {
+        width: 100%;
+    }
 
-th, td {
-    padding: 10px;
-    text-align: left;
-}
-
-th {
-    background-color: #f2f2f2;
-}
-
-.back-button {
-    display: inline-block;
-    background-color: #0275d8;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 4px;
-}
-
-.back-button:hover {
-    background-color: #025aa5;
+    ul.table-list li {
+        font-size: 13px;
+    }
 }
