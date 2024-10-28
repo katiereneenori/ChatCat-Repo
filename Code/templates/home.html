@@ -8,18 +8,31 @@
 </head>
 <body>
     <div class="container">
-        <form action="/table" method="POST" class="form-container">
+        <!-- Database Viewer Form -->
+        <form action="/table" method="POST">
             <h2>Database Viewer</h2>
-            <label for="table_name">Enter Table Name:</label>
             <input type="text" id="table_name" name="table_name" placeholder="Enter Table Name" required>
             <input type="submit" value="Find Table">
-            
             <h3>Available Tables:</h3>
-            <ul>
+            <ul class="table-list">
                 {% for table in tables %}
                 <li>{{ table }}</li>
                 {% endfor %}
             </ul>
+        </form>
+
+        <!-- Sentiment Analysis Form -->
+        <form action="/sentiment" method="POST">
+            <h2>Sentiment Analysis</h2>
+            <textarea name="user_input" rows="4" placeholder="Enter text for sentiment analysis" required></textarea>
+            <input type="submit" value="Analyze Sentiment">
+            
+            {% if sentiment_result %}
+            <div class="sentiment-result">
+                <p>Sentiment Polarity: {{ sentiment_result.polarity }}</p>
+                <p>Sentiment Subjectivity: {{ sentiment_result.subjectivity }}</p>
+            </div>
+            {% endif %}
         </form>
     </div>
 </body>
