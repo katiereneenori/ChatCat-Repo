@@ -3,11 +3,14 @@ import mysql.connector
 import pandas as pd
 from textblob import TextBlob
 
+from data_processing import load_and_process_data
+from model import train_model
+
 #      Tables_in_chatcatdb
 # 0         Admissions_Info
 # 1    Career_Opportunities
 # 2          Course_Details
-# 3     Degree_Requirements
+# 3     Degree_Requirementss
 # 4           Financial_Aid
 # 5            Program_Info
 # 6  Research_Opportunities
