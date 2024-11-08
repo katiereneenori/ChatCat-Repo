@@ -77,6 +77,12 @@ def start():
     tables = get_table_names()  # Fetch available table names
     return render_template('home.html', tables=tables)
 
+@app.route('/chatbot')
+def chatbot():
+    # put chatbot code here
+    # maybe we use a loop to keep displaying the messages
+    # return: render chatbot page 
+
 # Route for displaying a table
 @app.route('/table', methods=['POST'])
 def table():
