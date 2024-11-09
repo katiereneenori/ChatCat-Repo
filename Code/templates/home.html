@@ -9,18 +9,34 @@
         // Function to send a message to the chatbot
         async function sendMessage() {
             const message = document.getElementById("userMessage").value;
-            if (!message) return;
+            if (!message.trim()) {
+                alert("Please enter a message.");
+                return;
+            }
 
-            const response = await fetch("/chat", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: message })
-            });
-            const data = await response.json();
-            document.getElementById("chatResponse").innerText = data.response;
+            try {
+                // Send the POST request to the /chat route
+                const response = await fetch("/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: message })
+                });
 
-            // Clear the input
-            document.getElementById("userMessage").value = "";
+                // Check if the response is okay
+                if (!response.ok) {
+                    throw new Error("Server error. Please try again later.");
+                }
+
+                // Process the JSON response
+                const data = await response.json();
+                document.getElementById("chatResponse").innerText = data.response;
+
+                // Clear the input field after a successful response
+                document.getElementById("userMessage").value = "";
+            } catch (error) {
+                // Display the error message to the user
+                document.getElementById("chatResponse").innerText = error.message;
+            }
         }
 
         // Function to get the conversation state
@@ -48,7 +64,7 @@
         <!-- Database Viewer Form -->
         <form action="/table" method="POST">
             <h2>Database Viewer</h2>
-            <input type="text" id="table_name" name="table_name" placeholder="Enter Table Name" required>
+            <input type="text" id="table_name" name="table_name" placeholder="Enter Table Name" required>          
             <input type="submit" value="Find Table">
             <h3>Available Tables:</h3>
             <ul class="table-list">
