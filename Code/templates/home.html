@@ -5,9 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
     <title>ChatCat Home</title>
+    <script> //chatbot functionalities
+        // Function to send a message to the chatbot
+        async function sendMessage() {
+            const message = document.getElementById("userMessage").value;
+            if (!message) return;
+
+            const response = await fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: message })
+            });
+            const data = await response.json();
+            document.getElementById("chatResponse").innerText = data.response;
+
+            // Clear the input
+            document.getElementById("userMessage").value = "";
+        }
+
+        // Function to get the conversation state
+        async function getState() {
+            const response = await fetch("/get_state");
+            const data = await response.json();
+            document.getElementById("stateDisplay").innerText = JSON.stringify(data.conversation_state, null, 2);
+        }
+    </script>
 </head>
 <body>
     <div class="container">
+        <!-- Chat Interface -->
+        <h2>Chat with ChatCat</h2>
+        <div>
+            <input type="text" id="userMessage" placeholder="Type your message here" required>
+            <button type="button" onclick="sendMessage()">Send</button>
+        </div>
+        <p><strong>Bot Response:</strong> <span id="chatResponse"></span></p>
+
+        <!-- Display Current Conversation State -->
+        <button type="button" onclick="getState()">Get Conversation State</button>
+        <pre id="stateDisplay"></pre>
+
         <!-- Database Viewer Form -->
         <form action="/table" method="POST">
             <h2>Database Viewer</h2>
