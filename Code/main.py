@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session, jsonify
 import mysql.connector
 import pandas as pd
 from textblob import TextBlob
@@ -19,6 +19,9 @@ from model import train_model
 
 app = Flask(__name__)
 app.secret_key = '345543a3-53b0-43bb-1253-1f4aab3a2a3e'
+
+# In-memory storage for conversation states
+conversation_states = {}
 
 # SQL information
 MYSQL_ADDRESS = 'chatcatserver.cxau00w82zgn.us-east-2.rds.amazonaws.com'
@@ -71,6 +74,15 @@ def sql_head(self, table_name):
 
     return df
 
+def get_conversation_state():
+    user_id = session.get("user_id")
+    if user_id not in conversation_states:
+        conversation_states[user_id] = {"step" : "greeting"} #Initial default state
+
+def set_conversation_state():
+    user_id = session.get("user_id")
+    conversation_states[user_id] = state
+
 # Route for home page
 @app.route('/')
 def start():
@@ -97,6 +109,36 @@ def sentiment():
         sentiment_result = f"Polarity: {sentiment.polarity}, Subjectivity: {sentiment.subjectivity}"
         return render_template('sentiment.html', user_input=user_input, sentiment_result=sentiment_result)
     return render_template('sentiment.html')
+
+# New Route for chatting
+@app.route('/chat', methods=['POST'])
+def chat():
+    user_message = request.json.get("message")
+    
+    # Retrieve the current conversation state for the user
+    conversation_state = get_conversation_state()
+    
+    # Example: Update the chatbot state based on user message //STILL NEEDS DEVELOPMENT
+    if conversation_state["step"] == "greeting":
+        response = "Hello! How can I assist you today?"
+        conversation_state["step"] = "awaiting_response"  # Move to the next step
+    elif "asking for help" in user_message.lower():
+        response = "Sure, I can help you. What do you need assistance with?"
+        conversation_state["step"] = "help_requested"  # Update intent in state
+    else:
+        response = "I'm here to help. Please provide more details."
+    
+    # Update conversation state in memory
+    set_conversation_state(conversation_state)
+    
+    return jsonify({"response": response})
+
+# New Route for getting state
+@app.route('/get_state', methods=['GET'])
+def get_state():
+    # Endpoint to retrieve the current conversation state
+    conversation_state = get_conversation_state()
+    return {"conversation_state": conversation_state}, 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)
