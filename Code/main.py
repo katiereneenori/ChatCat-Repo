@@ -133,7 +133,6 @@ def loadChat_HTML():
 # New Route for chatting
 @app.route('/chat', methods=['POST'])
 def chat():
-    render_template('chat.html')
     user_message = request.json.get("message", "").strip()
     
     # Retrieve the current conversation state for the user
