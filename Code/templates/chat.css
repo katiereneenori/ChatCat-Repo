@@ -1,0 +1,23 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+div, p, button, pre {
+    margin-bottom: 15px;
+}
+
+input[type="text"] {
+    margin-right: 5px;
+}
+
+#chatResponse {
+    display: block;
+    margin-top: 5px;
+}
+
+#stateDisplay {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+}

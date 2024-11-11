@@ -103,6 +103,7 @@ def chatbot():
     # put chatbot code here
     # maybe we use a loop to keep displaying the messages
     # return: render chatbot page 
+    return
 
 # Route for displaying a table
 @app.route('/table', methods=['POST'])
@@ -125,9 +126,14 @@ def sentiment():
         return render_template('sentiment.html', user_input=user_input, sentiment_result=sentiment_result)
     return render_template('sentiment.html')
 
+@app.route('/chat-load')
+def loadChat_HTML():
+    return render_template('chat.html')
+
 # New Route for chatting
 @app.route('/chat', methods=['POST'])
 def chat():
+    render_template('chat.html')
     user_message = request.json.get("message", "").strip()
     
     # Retrieve the current conversation state for the user
