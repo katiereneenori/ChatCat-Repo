@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session, jsonify
 import mysql.connector
 import pandas as pd
 from textblob import TextBlob
@@ -19,6 +19,9 @@ from model import train_model
 
 app = Flask(__name__)
 app.secret_key = '345543a3-53b0-43bb-1253-1f4aab3a2a3e'
+
+# In-memory storage for conversation states
+conversation_states = {}
 
 # SQL information
 MYSQL_ADDRESS = 'chatcatserver.cxau00w82zgn.us-east-2.rds.amazonaws.com'
@@ -56,12 +59,16 @@ def get_table_names():
     conn.close()
     return tables
 
-def sql_head(self, table_name):
-    conn, cur = self.get_conn_cur()
+def sql_head(table_name):
+    conn, cur = get_conn_cur()
 
+    # query = "DESCRIBE %s"
+    # cur.execute(query, table_name)
     cur.execute(f"DESCRIBE {table_name}")
     columns = [col[0] for col in cur.fetchall()]
 
+    # query = "SELECT * FROM %s LIMIT 5"
+    # cur.execute(query, table_name)
     cur.execute(f"SELECT * FROM {table_name} LIMIT 5")
     rows = cur.fetchall()
 
@@ -71,9 +78,23 @@ def sql_head(self, table_name):
 
     return df
 
+def get_conversation_state():
+    user_id = session.get("user_id", "default_user")
+    if user_id not in conversation_states:
+        conversation_states[user_id] = {"step" : "greeting"} #Initial default state
+    return conversation_states[user_id]
+
+def set_conversation_state(state):
+    user_id = session.get("user_id", "default_user")
+    if user_id in conversation_states:
+        conversation_states[user_id].update(state)
+    else:
+        conversation_states[user_id] = state
+
 # Route for home page
 @app.route('/')
 def start():
+    session["user_id"] = "default_user" #Initialize User ID
     tables = get_table_names()  # Fetch available table names
     return render_template('home.html', tables=tables)
 
@@ -103,6 +124,53 @@ def sentiment():
         sentiment_result = f"Polarity: {sentiment.polarity}, Subjectivity: {sentiment.subjectivity}"
         return render_template('sentiment.html', user_input=user_input, sentiment_result=sentiment_result)
     return render_template('sentiment.html')
+
+# New Route for chatting
+@app.route('/chat', methods=['POST'])
+def chat():
+    user_message = request.json.get("message", "").strip()
+    
+    # Retrieve the current conversation state for the user
+    conversation_state = get_conversation_state()
+
+    table_names = get_table_names()
+
+    # Input handling based on specific commands
+    if "show tables" in user_message.lower():
+        # User asked to list all tables in the database
+        response = "Available tables are: " + ", ".join(table_names)
+
+    elif user_message.lower().startswith("get"):
+        # User wants to retrieve a specific table by name
+        table_name = user_message.split("get", 1)[1].strip()
+        if table_name in table_names:
+            table_df = sql_head(table_name)
+            response = f"Here are the first 5 rows of {table_name}:\n" + table_df.to_string(index=False)
+        else:
+            response = f"Table '{table_name}' does not exist. Please check the table name and try again."
+
+    elif conversation_state.get("step") == "greeting":
+        response = "Hello! How can I assist you today?"
+        conversation_state["step"] = "awaiting_response"
+
+    elif "help" in user_message.lower():
+        response = "Sure, I can help you. What do you need assistance with?"
+        conversation_state["step"] = "help_requested"  # Update intent in state
+
+    else:
+        response = "I'm here to help. Please provide more details or specify a valid command."
+    
+    # Update conversation state in memory
+    set_conversation_state(conversation_state)
+    
+    return jsonify({"response": response})
+
+# New Route for getting state
+@app.route('/get_state', methods=['GET'])
+def get_state():
+    # Endpoint to retrieve the current conversation state
+    conversation_state = get_conversation_state()
+    return {"conversation_state": conversation_state}, 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)
