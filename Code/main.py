@@ -5,6 +5,8 @@ from nltk.corpus import wordnet
 
 from textblob import TextBlob
 from textblob import Word
+import re
+
 
 from data_processing import load_and_process_data
 from model import train_model
@@ -80,6 +82,15 @@ def sql_head(table_name):
     conn.close()
 
     return df
+
+def preprocess_input(user_input):
+    """
+    Preprocesses the input text by cleaning and standardizing it.
+    """
+    cleaned_input = user_input.strip()  # Remove leading and trailing spaces
+    cleaned_input = cleaned_input.lower()  # Convert to lowercase
+    cleaned_input = re.sub(r'[^\w\s]', '', cleaned_input)  # Remove special characters
+    return cleaned_input
 
 def get_conversation_state():
     user_id = session.get("user_id", "default_user")
@@ -174,8 +185,11 @@ def table():
 def sentiment():
     if request.method == 'POST':
         user_input = request.form['user_input']
+
+        preprocessed_input = preprocess_input(user_input)
+
         # Analyze sentiment using TextBlob
-        blob = TextBlob(user_input)
+        blob = TextBlob(preprocessed_input)
         sentiment = blob.sentiment
         sentiment_result = f"Polarity: {sentiment.polarity}, Subjectivity: {sentiment.subjectivity}"
         return render_template('sentiment.html', user_input=user_input, sentiment_result=sentiment_result)
@@ -189,7 +203,10 @@ def loadChat_HTML():
 @app.route('/chat', methods=['POST'])
 def chat():
     user_message = request.json.get("message", "").strip()
-    
+
+    # Preprocess the user message
+    preprocessed_message = preprocess_input(user_message)
+
     # Retrieve the current conversation state for the user
     conversation_state = get_conversation_state()
 
@@ -198,16 +215,17 @@ def chat():
 
 
 
+    # Fetch available table names
     table_names = get_table_names()
 
     # Input handling based on specific commands
-    if "show tables" in user_message.lower():
+    if "show tables" in preprocessed_message:
         # User asked to list all tables in the database
         response = "Available tables are: " + ", ".join(table_names)
 
-    elif user_message.lower().startswith("get"):
+    elif preprocessed_message.startswith("get"):
         # User wants to retrieve a specific table by name
-        table_name = user_message.split("get", 1)[1].strip()
+        table_name = preprocessed_message.split("get", 1)[1].strip()
         if table_name in table_names:
             table_df = sql_head(table_name)
             response = f"Here are the first 5 rows of {table_name}:\n" + table_df.to_string(index=False)
@@ -218,7 +236,7 @@ def chat():
         response = "Hello! How can I assist you today?"
         conversation_state["step"] = "awaiting_response"
 
-    elif "help" in user_message.lower():
+    elif "help" in preprocessed_message:
         response = "Sure, I can help you. What do you need assistance with?"
         conversation_state["step"] = "help_requested"  # Update intent in state
 
@@ -229,6 +247,7 @@ def chat():
     set_conversation_state(conversation_state)
     
     return jsonify({"response": response})
+
 
 # New Route for getting state
 @app.route('/get_state', methods=['GET'])
