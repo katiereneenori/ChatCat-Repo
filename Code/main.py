@@ -1,7 +1,10 @@
 from flask import Flask, render_template, request, session, jsonify
 import mysql.connector
 import pandas as pd
+from nltk.corpus import wordnet 
+
 from textblob import TextBlob
+from textblob import Word
 
 from data_processing import load_and_process_data
 from model import train_model
@@ -81,7 +84,7 @@ def sql_head(table_name):
 def get_conversation_state():
     user_id = session.get("user_id", "default_user")
     if user_id not in conversation_states:
-        conversation_states[user_id] = {"step" : "greeting"} #Initial default state
+        conversation_states[user_id] = {"step" : "greeting", "query_history": [], "lemma_lists": [], "synsets_lists": []} #Initial default state
     return conversation_states[user_id]
 
 def set_conversation_state(state):
@@ -90,6 +93,58 @@ def set_conversation_state(state):
         conversation_states[user_id].update(state)
     else:
         conversation_states[user_id] = state
+
+#function to get tags in proper format for use with wordnet
+def get_wordnet_pos(tag):
+    if tag.startswith('VB'):  # Verbs
+        return wordnet.VERB
+    elif tag.startswith('NN'):  # Nouns
+        return wordnet.NOUN
+    elif tag.startswith('JJ'):  # Adjectives
+        return wordnet.ADJ
+    elif tag.startswith('RB'):  # Adverbs
+        return wordnet.ADV
+    else:
+        return wordnet.NOUN
+
+# adds the query to the state. It also adds a lemmatized form of the query.
+def add_query_to_state(user_message, conversation_state):
+     
+    query_history = conversation_state.get("query_history", [])
+    lemma_lists = conversation_state.get("lemma_lists", [])
+    synsets_lists = conversation_state.get("synsets_list", [])
+    user_message_tb = TextBlob(user_message)
+    query_history.append(user_message_tb)
+
+    #checks if more than 3 queries stored and gets rid of oldest if true
+    if len(query_history) > 3:
+        query_history.pop(0)
+        lemma_lists.pop(0)
+        synsets_lists.pop(0)
+
+
+    synsets_list = []
+    lemma_list = []
+    tags = user_message_tb.tags  #gets a list of tags to use for lemmatization
+   
+    for word, tag in tags:
+        word_obj = Word(word)
+        lemma = word_obj.lemmatize(get_wordnet_pos(tag))
+        lemma_list.append(lemma)
+        lemma_obj = Word(lemma)
+        synsets_list.append(lemma_obj.synsets)
+       
+        
+    lemma_lists.append(lemma_list)
+    synsets_lists.append(synsets_list)
+
+    conversation_state["query_history"] = query_history
+    conversation_state["lemma_lists"] = lemma_lists
+    conversation_state["synsets_list"] = synsets_lists
+    set_conversation_state(conversation_state)
+    
+
+
 
 # Route for home page
 @app.route('/')
@@ -137,6 +192,11 @@ def chat():
     
     # Retrieve the current conversation state for the user
     conversation_state = get_conversation_state()
+
+
+    add_query_to_state(user_message, conversation_state)
+
+
 
     table_names = get_table_names()
 
