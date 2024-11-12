@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session, jsonify
 import mysql.connector
 import pandas as pd
 from textblob import TextBlob
+import re
 
 from data_processing import load_and_process_data
 from model import train_model
@@ -58,6 +59,18 @@ def get_table_names():
     cur.close()
     conn.close()
     return tables
+
+def validate_input(input_text):
+    # Check if input is empty
+    if not input_text.strip():
+        return False, "Input cannot be empty."
+
+    # Define invalid characters (adjust pattern as needed)
+    if re.search(r'[^a-zA-Z0-9\s,.?!]', input_text):
+        return False, "Input contains invalid characters."
+
+    return True, ""
+
 
 def sql_head(table_name):
     conn, cur = get_conn_cur()
@@ -118,6 +131,12 @@ def table():
 def sentiment():
     if request.method == 'POST':
         user_input = request.form['user_input']
+
+        # Validate the user input
+        is_valid, error_message = validate_input(user_input)
+        if not is_valid:
+            return render_template('sentiment.html', user_input=user_input, sentiment_result=error_message)
+
         # Analyze sentiment using TextBlob
         blob = TextBlob(user_input)
         sentiment = blob.sentiment
@@ -129,6 +148,11 @@ def sentiment():
 @app.route('/chat', methods=['POST'])
 def chat():
     user_message = request.json.get("message", "").strip()
+
+    # Validate the user input
+    is_valid, error_message = validate_input(user_message)
+    if not is_valid:
+        return jsonify({"response": error_message}), 400
     
     # Retrieve the current conversation state for the user
     conversation_state = get_conversation_state()
