@@ -1,4 +1,4 @@
-<!-- table.html -->
+<!-- sentiment.html -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,7 +6,7 @@
     <!-- Meta tags and title -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Database Table Viewer</title>
+    <title>Sentiment Analysis</title>
 
     <!-- Favicon (optional) -->
     <link rel="icon" href="{{ url_for('static', filename='images/ua_logo.jpg') }}" type="image/jpeg">
@@ -29,15 +29,22 @@
         <!-- Header Section with University Logo -->
         <header class="header">
             <img src="{{ url_for('static', filename='images/ua_logo.jpg') }}" alt="University of Arizona Logo" class="logo">
-            <h1>Database Table Viewer</h1>
+            <h1>Sentiment Analysis</h1>
         </header>
 
-        <!-- Table Content -->
+        <!-- Sentiment Analysis Form -->
         <div class="content">
-            <h2>Table: {{ table_name }}</h2>
-            <div class="table-container">
-                {{ table_html | safe }}
-            </div>
+            <form action="/sentiment" method="POST" class="form-section">
+                <textarea name="user_input" rows="4" placeholder="Enter text for sentiment analysis" required></textarea>
+                <input type="submit" value="Analyze Sentiment">
+                
+                {% if sentiment_result %}
+                <div class="sentiment-result">
+                    <p>Sentiment Polarity: {{ sentiment_result.polarity }}</p>
+                    <p>Sentiment Subjectivity: {{ sentiment_result.subjectivity }}</p>
+                </div>
+                {% endif %}
+            </form>
             <a href="/" class="back-button">Back to Home</a>
         </div>
 

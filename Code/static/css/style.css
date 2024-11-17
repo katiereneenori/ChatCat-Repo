@@ -1,75 +1,186 @@
-/* General body styling */
+/* style.css */
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f4f8; /* Light background for a clean look */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #f4f4f4;
 }
 
-/* Form container styling */
-form {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.main-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.header {
+    background-color: #003366;
+    color: white;
     text-align: center;
-    max-width: 500px;
-    width: 90%;
+    padding: 20px 0;
 }
 
-/* Button styling */
-input[type="submit"] {
-    background-color: #007bff;
+.header .logo {
+    width: 100px;
+    height: auto;
+}
+
+.chat-container {
+    flex: 1;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.chat-header {
+    font-size: 24px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #003366;
+}
+
+.chat-history {
+    height: 400px;
+    overflow-y: scroll;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #fafafa;
+}
+
+.user-message {
+    text-align: right;
+    margin: 5px 0;
+    color: #333;
+}
+
+.bot-response {
+    text-align: left;
+    margin: 5px 0;
+    color: #0066cc;
+}
+
+.chat-input {
+    display: flex;
+}
+
+.chat-input input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
+    font-size: 16px;
+}
+
+.chat-input button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #0066cc;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 0 4px 4px 0;
+}
+
+.chat-input button:hover {
+    background-color: #005bb5;
+}
+
+.form-section {
+    background-color: white;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-section h2 {
+    color: #003366;
+}
+
+.form-section input[type="text"],
+.form-section textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.form-section input[type="submit"] {
+    background-color: #0066cc;
     color: white;
     padding: 10px 20px;
     border: none;
-    border-radius: 25px;
+    border-radius: 4px;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
 }
 
-input[type="submit"]:hover {
-    background-color: #0056b3;
+.form-section input[type="submit"]:hover {
+    background-color: #005bb5;
 }
 
-/* List styling */
-ul.table-list {
-    list-style-type: none; /* Remove bullet points */
+.table-list {
+    list-style-type: none;
     padding: 0;
-    margin-top: 20px;
 }
 
-ul.table-list li {
-    background-color: #e9ecef;
-    padding: 12px;
-    margin: 6px 0;
-    border-radius: 8px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+.table-list li {
+    padding: 5px 0;
+    color: #003366;
 }
 
-ul.table-list li:hover {
-    background-color: #dfe3e8;
-    transform: translateY(-2px); /* Slight lift effect on hover */
+.sentiment-result {
+    background-color: #e6f7ff;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.footer {
+    background-color: #003366;
+    color: white;
+    text-align: center;
+    padding: 15px;
+}
+
+.footer p {
+    margin: 0;
 }
 
 /* Responsive adjustments */
 @media (max-width: 600px) {
-    form {
+    .header h1 {
+        font-size: 28px;
+    }
+
+    .chat-container {
         width: 95%;
     }
 
-    input[type="submit"] {
+    .chat-header {
+        font-size: 20px;
+    }
+
+    .chat-input input[type="text"] {
+        font-size: 14px;
+    }
+
+    .chat-input button {
+        font-size: 14px;
+        padding: 0 15px;
+    }
+
+    .form-section input[type="submit"] {
         width: 100%;
     }
 
-    ul.table-list li {
+    .table-list li {
         font-size: 13px;
     }
 }

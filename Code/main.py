@@ -32,8 +32,7 @@ MYSQL_DATABASE = 'chatcatdb'
 
 def get_conn_cur():
     cnx = mysql.connector.connect(user=MYSQL_USERNAME, password=MYSQL_PASSWORD,
-                                  host=MYSQL_ADDRESS, database=MYSQL_DATABASE,
-                                  port='3306')
+    host=MYSQL_ADDRESS, database=MYSQL_DATABASE,port='3306')
     return (cnx, cnx.cursor())
 
 def run_query(query_string):
@@ -116,6 +115,7 @@ def chatbot():
     # put chatbot code here
     # maybe we use a loop to keep displaying the messages
     # return: render chatbot page 
+    return render_template('chatbot.html')
 
 # Route for displaying a table
 @app.route('/table', methods=['POST'])
