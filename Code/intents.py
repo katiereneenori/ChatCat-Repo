@@ -34,7 +34,15 @@ intents = {
         "submit application",
         "application guidelines",
         "requirements to apply",
-        "steps to enroll"
+        "steps to enroll",
+        # Added Patterns
+        "admissions",
+        "admissions information",
+        "information about admissions",
+        "tell me about admissions",
+        "admission info",
+        "admission details",
+        "admissions details"
     ],
     "CurriculumDetails": [
         "courses", "curriculum", "prerequisites", "electives", "planning guide",
