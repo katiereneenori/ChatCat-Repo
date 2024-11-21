@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/css/chatcat.css">
+    <title>Chatcat</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Chatcat</h1>
+    </div>
+    <div class="chat-container" id="chat-container">
+        <!-- Chat messages will go here -->
+    </div>
+    <div class="input-wrapper">
+        <form id="chat-form">
+            <input type="text" id="user-input" placeholder="Type your message..." required />
+            <button type="submit" class="btn">Send</button>
+        </form>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+        const chatForm = document.getElementById('chat-form');
+        const userInput = document.getElementById('user-input');
+
+        const responses = [
+            "That's interesting! Tell me more.",
+            "I didn't quite get that, can you explain?",
+            "Oh, I see! What else?",
+            "Sounds great! What are your thoughts?",
+            "Hmm, intriguing. Can you elaborate?"
+        ];
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function typeMessage(sender, message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${sender}-message`;
+            chatContainer.appendChild(messageDiv);
+
+            for (let i = 0; i < message.length; i++) {
+                await sleep(50);
+                messageDiv.textContent = `${sender === 'user' ? 'You' : 'Chatcat'}: ${message.substring(0, i + 1)}`;
+            }
+
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            // Display user message with animation
+            await typeMessage('user', message);
+
+            // Clear the input
+            userInput.value = '';
+
+            // Generate random response
+            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+            await sleep(500); // Delay for better UX
+            await typeMessage('server', randomResponse);
+        });
+    </script>
+</body>
+</html>
