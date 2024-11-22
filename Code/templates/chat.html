@@ -3,61 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/chat.css') }}">
-    <title>Chat Page</title>
-    <script> //chatbot functionalities
-        // Function to send a message to the chatbot
-        async function sendMessage() {
-            const message = document.getElementById("userMessage").value;
-            if (!message.trim()) {
-                alert("Please enter a message.");
-                return;
-            }
+    <link rel="stylesheet" href="../static/css/chatcat.css">
+    <title>Chatcat</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Chatcat</h1>
+    </div>
+    <div class="chat-container" id="chat-container">
+        <!-- Chat messages will appear here -->
+    </div>
+    <div class="input-wrapper">
+        <form id="chat-form">
+            <input type="text" id="user-input" placeholder="Type your message..." required />
+            <button type="submit" class="btn">Send</button>
+        </form>
+    </div>
 
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+        const chatForm = document.getElementById('chat-form');
+        const userInput = document.getElementById('user-input');
+
+        // Send message to the chatbot and get the response
+        async function sendMessage(message) {
             try {
-                // Send the POST request to the /chat route
                 const response = await fetch("/chat", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ message: message })
                 });
 
-                // Check if the response is okay
-                if (!response.ok) {
-                    throw new Error("Server error. Please try again later.");
-                }
-
-                // Process the JSON response
+                if (!response.ok) throw new Error("Server error. Please try again later.");
                 const data = await response.json();
-                document.getElementById("chatResponse").innerText = data.response;
-
-                // Clear the input field after a successful response
-                document.getElementById("userMessage").value = "";
+                return data.response;
             } catch (error) {
-                // Display the error message to the user
-                document.getElementById("chatResponse").innerText = error.message;
+                return error.message;
             }
         }
 
-        // Function to get the conversation state
-        async function getState() {
-            const response = await fetch("/get_state");
-            const data = await response.json();
-            document.getElementById("stateDisplay").innerText = JSON.stringify(data.conversation_state, null, 2);
-        }
-    </script>
-</head>
-<body>
-    <div>
-        <input type="text" id="userMessage" placeholder="Type your message here" required>
-        <button type="button" onclick="sendMessage()">Send</button>
-    </div>
-    <br>
-    <p><strong>Bot Response:</strong> <span id="chatResponse"></span></p>
+        // Function to display message with animation
+        async function typeMessage(sender, message) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${sender}-message`;
+            chatContainer.appendChild(messageDiv);
 
-    <br>
-    <!-- Display Current Conversation State -->
-    <button type="button" onclick="getState()">Get Conversation State</button>
-    <pre id="stateDisplay"></pre>
+            for (let i = 0; i < message.length; i++) {
+                await new Promise(resolve => setTimeout(resolve, 50));
+                messageDiv.textContent = `${sender === 'user' ? 'You' : 'Chatcat'}: ${message.substring(0, i + 1)}`;
+            }
+
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Handle form submission
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            // Display user's message
+            await typeMessage('user', message);
+
+            // Clear input field
+            userInput.value = '';
+
+            // Get chatbot response and display it
+            const botResponse = await sendMessage(message);
+            await typeMessage('server', botResponse);
+        });
+    </script>
 </body>
 </html>
