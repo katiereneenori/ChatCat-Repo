@@ -65,10 +65,10 @@ intents = {
         "career services", "student services", "advisor", "contact information",
         "university resources", "support services", "academic advising", "student support"
     ],
-    "TransferCredits": [
-        "transfer credits", "credit applicability", "transfer process",
-        "transfer student", "credit transfer", "transfer evaluation", "transferring credits"
-    ],
+    #"TransferCredits": [
+    #    "transfer credits", "credit applicability", "transfer process",
+    #    "transfer student", "credit transfer", "transfer evaluation", "transferring credits"
+    #],
     "AdvisorContact": [
         "academic advisor", "contact advisor", "schedule meeting",
         "advisor information", "get in touch with advisor", "advisor email", "advisor phone"
@@ -79,8 +79,5 @@ intents = {
     ],
     "ShowTables": [
         "show tables", "list all tables", "available tables"
-    ],
-    "GetTable": [
-        "get table", "retrieve table", "fetch table"
     ]
 }

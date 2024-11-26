@@ -17,7 +17,6 @@ from handlers import (
     handle_research_opportunities,
     handle_career_opportunities,
     handle_university_resources,
-    handle_transfer_credits,
     handle_advisor_contact,
     handle_general_queries,
     handle_unknown_intent,
@@ -193,17 +192,11 @@ def chat():
         elif intent == "UniversityResources":
             response = handle_university_resources(user_message)
             conversation_state["step"] = "awaiting_resource_selection"
-        elif intent == "TransferCredits":
-            response = handle_transfer_credits(user_message)
-            conversation_state["step"] = "awaiting_transfer_details"
         elif intent == "AdvisorContact":
             response = handle_advisor_contact(user_message)
             conversation_state["step"] = "awaiting_advisor_type"
         elif intent == "ShowTables":
             response = handle_show_tables()
-        elif intent == "GetTable":
-            table_name = extract_table_name(user_message)
-            response = handle_get_table(table_name)
         elif intent == "GeneralQueries":
             response = handle_general_queries(user_message)
             conversation_state["step"] = "awaiting_general_query"

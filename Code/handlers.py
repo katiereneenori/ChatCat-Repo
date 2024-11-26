@@ -32,16 +32,16 @@ def handle_program_information(user_message):
     Returns:
         str: Program information response.
     """
-    query = "SELECT program_name, description FROM Program_Info"
+    query = "SELECT program_name, chatcat_response FROM Program_Info"
     df = run_query(query)
     
     if df.empty:
         logger.warning("No program information found in the database.")
         return "I'm sorry, I couldn't find any information about our programs at the moment."
     
-    response = "**Our Software Engineering Programs:**\n"
+    response = "Our Software Engineering Programs:\n"
     for _, row in df.iterrows():
-        response += f"**{row['program_name']}**: {row['description']}\n\n"
+        response += f"{row['program_name']}: {row['chatcat_response']}\n\n"
     
     logger.info("Provided Program Information.")
     return response.strip()
@@ -57,20 +57,19 @@ def handle_admissions_assistance(user_message):
         str: Admissions assistance response.
     """
     query = """
-    SELECT requirement, description 
+    SELECT requirements, chatcat_response
     FROM Admissions_Info 
-    WHERE LOWER(program) = %s
     """
     program_name = 'software engineering'
-    df = run_query(query, (program_name,))
+    df = run_query(query) #(program_name,))
     
     if df.empty:
         logger.warning(f"No admissions information found for program '{program_name}'.")
         return "I'm sorry, I couldn't retrieve admissions information right now."
     
-    response = "**Admissions Assistance for Software Engineering Program:**\n"
+    response = "Admissions Assistance for Software Engineering Program:\n"
     for _, row in df.iterrows():
-        response += f"**{row['requirement']}**: {row['description']}\n\n"
+        response += f"{row['requirements']}: {row['chatcat_response']}\n\n"
     
     logger.info("Provided Admissions Assistance.")
     return response.strip()
@@ -86,9 +85,8 @@ def handle_curriculum_details(user_message):
         str: Curriculum details response.
     """
     query = """
-    SELECT course_name, description 
-    FROM Curriculum_Details 
-    WHERE program = 'Software Engineering'
+    SELECT course_id, course_name, description 
+    FROM Course_Details
     """
     df = run_query(query)
     
@@ -96,9 +94,9 @@ def handle_curriculum_details(user_message):
         logger.warning("No curriculum details found in the database.")
         return "I'm sorry, I couldn't find curriculum details at the moment."
     
-    response = "**Software Engineering Curriculum:**\n"
+    response = "Software Engineering Curriculum:\n"
     for _, row in df.iterrows():
-        response += f"**{row['course_name']}**: {row['description']}\n\n"
+        response += f"{row['course_name']} ({row['course_id']}): {row['description']}\n\n"
     
     logger.info("Provided Curriculum Details.")
     return response.strip()
@@ -113,16 +111,16 @@ def handle_financial_aid(user_message):
     Returns:
         str: Financial aid information response.
     """
-    query = "SELECT aid_type, description FROM Financial_Aid"
+    query = "SELECT aid_name, description FROM Financial_Aid"
     df = run_query(query)
     
     if df.empty:
         logger.warning("No financial aid information found in the database.")
         return "I'm sorry, I couldn't retrieve financial aid information right now."
     
-    response = "**Financial Aid Options:**\n"
+    response = "Financial Aid Options:\n"
     for _, row in df.iterrows():
-        response += f"**{row['aid_type']}**: {row['description']}\n\n"
+        response += f"{row['aid_name']}: {row['description']}\n\n"
     
     logger.info("Provided Financial Aid Information.")
     return response.strip()
@@ -144,9 +142,9 @@ def handle_research_opportunities(user_message):
         logger.warning("No research opportunities found in the database.")
         return "I'm sorry, I couldn't find any research opportunities at the moment."
     
-    response = "**Research Opportunities:**\n"
+    response = "Research Opportunities:\n"
     for _, row in df.iterrows():
-        response += f"**{row['research_area']}**: {row['description']}\n\n"
+        response += f"{row['research_area']}: {row['description']}\n\n"
     
     logger.info("Provided Research Opportunities Information.")
     return response.strip()
@@ -161,16 +159,16 @@ def handle_career_opportunities(user_message):
     Returns:
         str: Career opportunities response.
     """
-    query = "SELECT industry, job_title, description FROM Career_Opportunities"
+    query = "SELECT career_area, description FROM Career_Opportunities"
     df = run_query(query)
     
     if df.empty:
         logger.warning("No career opportunities found in the database.")
         return "I'm sorry, I couldn't find any career opportunities at the moment."
     
-    response = "**Career Opportunities for Software Engineering Graduates:**\n"
+    response = "Career Opportunities for Software Engineering Graduates:\n"
     for _, row in df.iterrows():
-        response += f"**{row['job_title']}** in **{row['industry']}**: {row['description']}\n\n"
+        response += f"{row['career_area']} : {row['description']}\n\n"
     
     logger.info("Provided Career Opportunities Information.")
     return response.strip()
@@ -185,42 +183,18 @@ def handle_university_resources(user_message):
     Returns:
         str: University resources response.
     """
-    query = "SELECT resource_name, description FROM University_Resources"
+    query = "SELECT url, chatcat_response FROM Websites"
     df = run_query(query)
     
     if df.empty:
         logger.warning("No university resources found in the database.")
         return "I'm sorry, I couldn't retrieve university resources information right now."
     
-    response = "**University Resources and Support Services:**\n"
+    response = "University Resources and Support Services:\n"
     for _, row in df.iterrows():
-        response += f"**{row['resource_name']}**: {row['description']}\n\n"
+        response += f"{row['chatcat_response']}: {row['url']}: \n\n"
     
     logger.info("Provided University Resources Information.")
-    return response.strip()
-
-def handle_transfer_credits(user_message):
-    """
-    Provides information about transferring credits.
-    
-    Args:
-        user_message (str): The user's message.
-    
-    Returns:
-        str: Transfer credits information response.
-    """
-    query = "SELECT course, status, notes FROM Transfer_Credits"
-    df = run_query(query)
-    
-    if df.empty:
-        logger.warning("No transfer credits information found in the database.")
-        return "I'm sorry, I couldn't find any information about transferring credits at the moment."
-    
-    response = "**Transfer Credits Information:**\n"
-    for _, row in df.iterrows():
-        response += f"**{row['course']}**: {row['status']} - {row['notes']}\n\n"
-    
-    logger.info("Provided Transfer Credits Information.")
     return response.strip()
 
 def handle_advisor_contact(user_message):
@@ -239,16 +213,16 @@ def handle_advisor_contact(user_message):
         logger.warning("Advisor type not specified or unrecognized.")
         return "Please specify whether you're looking for an Undergraduate or Graduate advisor."
 
-    query = "SELECT advisor_name, contact_email, contact_phone FROM Advisors WHERE advisor_type = %s"
-    df = run_query(query, (advisor_type,))
+    query = "SELECT program_name, contact_advisors FROM Program_Info"
+    df = run_query(query)
     
     if df.empty:
         logger.warning(f"No advisors found for advisor type: {advisor_type}.")
         return f"I'm sorry, I couldn't find contact information for {advisor_type} advisors."
 
-    response = f"**{advisor_type} Academic Advisors:**\n"
+    response = f"{advisor_type} Academic Advisors:\n"
     for _, row in df.iterrows():
-        response += f"**{row['advisor_name']}**\nEmail: {row['contact_email']}\nPhone: {row['contact_phone']}\n\n"
+        response += f"{row['program_name']}: {row['contact_advisors']}\n\n"
     
     logger.info(f"Provided Advisor Contact Information for {advisor_type} advisors.")
     return response.strip()
@@ -297,7 +271,7 @@ def handle_show_tables():
     
     tables = df.iloc[:, 0].tolist()
     table_list = ", ".join(tables)
-    response = f"**Available Tables:** {table_list}"
+    response = f"Available Tables: {table_list}"
     
     logger.info("Provided List of Available Tables.")
     return response
@@ -331,7 +305,7 @@ def handle_get_table(table_name):
     # Convert DataFrame to HTML table with proper formatting
     table_html = table_df.to_html(classes='dataframe table', escape=False, index=False)
     
-    response = f"**First 5 Rows of {table_name}:**\n" + table_html
+    response = f"First 5 Rows of {table_name}:\n" + table_html
     logger.info(f"Provided data for table '{table_name}'.")
     return response
 
