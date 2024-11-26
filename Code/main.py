@@ -95,7 +95,7 @@ def preprocess_input(user_input):
 def get_conversation_state():
     user_id = session.get("user_id", "default_user")
     if user_id not in conversation_states:
-        conversation_states[user_id] = {"step" : "greeting", "query_history": [], "lemma_lists": [], "synsets_lists": []} #Initial default state
+        conversation_states[user_id] = {"step" : "greeting", "query_history": [], "lemma_lists": [], "synsets_lists": [], "admin": False} #Initial default state
     return conversation_states[user_id]
 
 def set_conversation_state(state):
@@ -105,6 +105,32 @@ def set_conversation_state(state):
     else:
         conversation_states[user_id] = state
 
+
+
+def authenticate(username, password):
+    conn, cur = get_conn_cur()
+    
+    # Query to check if the username and password match
+    query = "SELECT admin FROM Users WHERE username = %s AND password = %s"
+    cur.execute(query, (username, password))
+    result = cur.fetchone()
+    
+    if result:
+        is_admin = result[0]  
+        state = get_conversation_state()
+        state["admin"] = is_admin
+        set_conversation_state(state)
+        return True
+    
+    return False  
+
+
+
+
+# Fetch result
+    result = cur.fetchone()[0]
+    cur.close()
+    conn.close()
 #function to get tags in proper format for use with wordnet
 def get_wordnet_pos(tag):
     if tag.startswith('VB'):  # Verbs
@@ -160,9 +186,11 @@ def add_query_to_state(user_message, conversation_state):
 # Route for home page
 @app.route('/')
 def start():
+    session.clear() #Clear session data 
     session["user_id"] = "default_user" #Initialize User ID
+    logged_in = session.get('logged_in', False)
     tables = get_table_names()  # Fetch available table names
-    return render_template('home.html', tables=tables)
+    return render_template('home.html', tables=tables, logged_in=logged_in)
 
 @app.route('/chatbot')
 def chatbot():
@@ -247,6 +275,21 @@ def chat():
     set_conversation_state(conversation_state)
     
     return jsonify({"response": response})
+
+#route for logging in
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form['username']
+    password = request.form['password']
+
+    if authenticate(username, password):
+        session['logged_in'] = True
+        session['username'] = username  
+        return render_template('home.html', tables=get_table_names(), logged_in=True)
+    else:
+        error_message = "Invalid username or password. Please try again."
+        return render_template('home.html', tables=get_table_names(), logged_in=False, error=error_message)
 
 
 # New Route for getting state
