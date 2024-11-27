@@ -86,6 +86,17 @@
             const data = await response.json();
             document.getElementById("stateDisplay").innerText = JSON.stringify(data.conversation_state, null, 2);
         }
+
+        // **Added: Enable Enter key to send message**
+        document.addEventListener("DOMContentLoaded", function() {
+            const userInput = document.getElementById("userMessage");
+            userInput.addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault(); // Prevent form submission or newline
+                    sendMessage();          // Call the sendMessage function
+                }
+            });
+        });
     </script>
 </head>
 <body>
@@ -94,7 +105,7 @@
 
         <!-- Header Section with University Logo -->
         <header class="header">
-            <img src="{{ url_for('static', filename='images/ua_logo.jpg') }}" alt="University of Arizona Logo" class="logo">
+            <img src="{{ url_for('static', filename='css/images/ua_logo.jpg') }}" alt="University of Arizona Logo" class="logo">
             <h1>ChatCat</h1>
             <h2>Your UA Software Engineering Virtual Assistant</h2>
         </header>

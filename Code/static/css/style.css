@@ -4,6 +4,15 @@ body {
     font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
+    
+    /* Add the background image */
+    background-image: url('/static/css/images/background.jpg');
+    background-size: cover;               /* Ensures the image covers the entire background */
+    background-repeat: no-repeat;         /* Prevents the image from repeating */
+    background-position: center center;   /* Centers the image */
+    background-attachment: fixed;         /* Keeps the background fixed during scrolling */
+
+    /* Optional: Retain a fallback background color */
     background-color: #f4f4f4;
 }
 
@@ -17,7 +26,7 @@ body {
     background-color: #003366;
     color: white;
     text-align: center;
-    padding: 20px 0;
+    padding: 5px 0;
 }
 
 .header .logo {
@@ -27,12 +36,14 @@ body {
 
 .chat-container {
     flex: 1;
-    max-width: 800px;
+    width: 600px;                        /* Reduced width from 800px to 600px */
     margin: 20px auto;
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
+    display: flex;
+    flex-direction: column;               /* For flex alignment */
 }
 
 .chat-header {
@@ -43,6 +54,8 @@ body {
 }
 
 .chat-history {
+    display: flex;                        /* For flex layout */
+    flex-direction: column;               /* Stack messages vertically */
     height: 400px;
     overflow-y: scroll;
     border: 1px solid #ddd;
@@ -52,15 +65,49 @@ body {
 }
 
 .user-message {
-    text-align: right;
-    margin: 5px 0;
+    background-color: #FFCCCC;            /* Red */
     color: #333;
+    padding: 10px 15px;
+    border-radius: 20px;
+    max-width: 70%;
+    margin: 5px 0;
+    align-self: flex-start;                /* Align to the left */
+    display: inline-block;
+    position: relative;
+}
+
+.user-message::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: -10px;                           /* Tail on the left */
+    width: 0;
+    height: 0;
+    border-top: 10px solid #FFCCCC;        /* Match bubble color */
+    border-right: 10px solid transparent;
 }
 
 .bot-response {
-    text-align: left;
+    background-color: #CCE5FF;            /* Blue */
+    color: #333;
+    padding: 10px 15px;
+    border-radius: 20px;
+    max-width: 70%;
     margin: 5px 0;
-    color: #0066cc;
+    align-self: flex-end;                  /* Align to the right */
+    display: inline-block;
+    position: relative;
+}
+
+.bot-response::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: -10px;                          /* Tail on the right */
+    width: 0;
+    height: 0;
+    border-top: 10px solid #CCE5FF;        /* Match bubble color */
+    border-left: 10px solid transparent;
 }
 
 .chat-input {
@@ -154,9 +201,15 @@ body {
 }
 
 /* Responsive adjustments */
+@media (max-width: 700px) {              /* Updated breakpoint from 800px to 700px */
+    .chat-container {
+        width: 90%;                       /* Adjust width for smaller screens */
+    }
+}
+
 @media (max-width: 600px) {
     .header h1 {
-        font-size: 28px;
+        font-size: 20px;
     }
 
     .chat-container {
