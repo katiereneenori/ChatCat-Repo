@@ -60,18 +60,71 @@ def handle_admissions_assistance(user_message):
     SELECT requirements, chatcat_response
     FROM Admissions_Info 
     """
-    program_name = 'software engineering'
-    df = run_query(query) #(program_name,))
+    df = run_query(query)
     
     if df.empty:
-        logger.warning(f"No admissions information found for program '{program_name}'.")
+        logger.warning(f"No admissions information found for program.")
         return "I'm sorry, I couldn't retrieve admissions information right now."
     
     response = "Admissions Assistance for Software Engineering Program:\n"
     for _, row in df.iterrows():
-        response += f"{row['requirements']}: {row['chatcat_response']}\n\n"
+        response += f"{row['requirements']}\n\n"
     
     logger.info("Provided Admissions Assistance.")
+    return response.strip()
+
+def handle_admissions_assistance_bs(user_message):
+    """
+    Provides admissions assistance information.
+    
+    Args:
+        user_message (str): The user's message.
+    
+    Returns:
+        str: Admissions assistance response.
+    """
+    query = """
+    SELECT requirements, chatcat_response
+    FROM Admissions_Info WHERE program_id = 1
+    """
+    df = run_query(query)
+    
+    if df.empty:
+        logger.warning(f"No admissions information found for program.")
+        return "I'm sorry, I couldn't retrieve admissions information right now."
+    
+    response = "Admissions Assistance for the Bachelor's Program:\n"
+    for _, row in df.iterrows():
+        response += f"{row['requirements']}\n\n"
+    
+    logger.info("Provided BS Admissions Assistance.")
+    return response.strip()
+
+def handle_admissions_assistance_ms(user_message):
+    """
+    Provides admissions assistance information.
+    
+    Args:
+        user_message (str): The user's message.
+    
+    Returns:
+        str: Admissions assistance response.
+    """
+    query = """
+    SELECT requirements, chatcat_response
+    FROM Admissions_Info WHERE program_id = 2
+    """
+    df = run_query(query)
+    
+    if df.empty:
+        logger.warning(f"No admissions information found for program.")
+        return "I'm sorry, I couldn't retrieve admissions information right now."
+    
+    response = "Admissions Assistance for the Master's Program:\n"
+    for _, row in df.iterrows():
+        response += f"{row['requirements']}\n\n"
+    
+    logger.info("Provided MS Admissions Assistance.")
     return response.strip()
 
 def handle_curriculum_details(user_message):
@@ -101,6 +154,60 @@ def handle_curriculum_details(user_message):
     logger.info("Provided Curriculum Details.")
     return response.strip()
 
+def handle_curriculum_details_bs(user_message):
+    """
+    Provides details about the software engineering curriculum.
+    
+    Args:
+        user_message (str): The user's message.
+    
+    Returns:
+        str: Curriculum details response.
+    """
+    query = """
+    SELECT course_id, course_name, description 
+    FROM Course_Details WHERE program_id = 1
+    """
+    df = run_query(query)
+    
+    if df.empty:
+        logger.warning("No curriculum details found in the database.")
+        return "I'm sorry, I couldn't find curriculum details at the moment."
+    
+    response = "Software Engineering Undergraduate Curriculum:\n"
+    for _, row in df.iterrows():
+        response += f"{row['course_name']} ({row['course_id']}): {row['description']}\n\n"
+    
+    logger.info("Provided Curriculum Details.")
+    return response.strip()
+
+def handle_curriculum_details_ms(user_message):
+    """
+    Provides details about the software engineering curriculum.
+    
+    Args:
+        user_message (str): The user's message.
+    
+    Returns:
+        str: Curriculum details response.
+    """
+    query = """
+    SELECT course_id, course_name, description 
+    FROM Course_Details WHERE program_id = 2
+    """
+    df = run_query(query)
+    
+    if df.empty:
+        logger.warning("No curriculum details found in the database.")
+        return "I'm sorry, I couldn't find curriculum details at the moment."
+    
+    response = "Software Engineering Graduate Curriculum:\n"
+    for _, row in df.iterrows():
+        response += f"{row['course_name']} ({row['course_id']}): {row['description']}\n\n"
+    
+    logger.info("Provided Curriculum Details.")
+    return response.strip()
+
 def handle_financial_aid(user_message):
     """
     Provides information about financial aid options.
@@ -123,6 +230,78 @@ def handle_financial_aid(user_message):
         response += f"{row['aid_name']}: {row['description']}\n\n"
     
     logger.info("Provided Financial Aid Information.")
+    return response.strip()
+
+def handle_financial_aid_bs(user_message):
+    """
+    Provides information about financial aid options.
+    
+    Args:
+        user_message (str): The user's message.
+    
+    Returns:
+        str: Financial aid information response.
+    """
+    query = "SELECT aid_name, description FROM Financial_Aid WHERE program_ID = 1"
+    df = run_query(query)
+    
+    if df.empty:
+        logger.warning("No financial aid information for the BS program found in the database.")
+        return "I'm sorry, I couldn't retrieve financial aid information for the BS program right now."
+    
+    response = "BS Financial Aid Options:\n"
+    for _, row in df.iterrows():
+        response += f"{row['aid_name']}: {row['description']}\n\n"
+    
+    logger.info("Provided BS Financial Aid Information.")
+    return response.strip()
+
+def handle_financial_aid_ms(user_message):
+    """
+    Provides information about financial aid options.
+    
+    Args:
+        user_message (str): The user's message.
+    
+    Returns:
+        str: Financial aid information response.
+    """
+    query = "SELECT aid_name, description FROM Financial_Aid WHERE program_ID = 2"
+    df = run_query(query)
+    
+    if df.empty:
+        logger.warning("No financial aid information for the MS program found in the database.")
+        return "I'm sorry, I couldn't retrieve financial aid information for the MS program right now."
+    
+    response = "MS Financial Aid Options:\n"
+    for _, row in df.iterrows():
+        response += f"{row['aid_name']}: {row['description']}\n\n"
+    
+    logger.info("Provided MS Financial Aid Information.")
+    return response.strip()
+
+def handle_financial_aid_phd(user_message):
+    """
+    Provides information about financial aid options.
+    
+    Args:
+        user_message (str): The user's message.
+    
+    Returns:
+        str: Financial aid information response.
+    """
+    query = "SELECT aid_name, description FROM Financial_Aid WHERE program_ID = 3"
+    df = run_query(query)
+    
+    if df.empty:
+        logger.warning("No financial aid information for the PhD program found in the database.")
+        return "I'm sorry, I couldn't retrieve financial aid information for the PhD program right now."
+    
+    response = "PhD Financial Aid Options:\n"
+    for _, row in df.iterrows():
+        response += f"{row['aid_name']}: {row['description']}\n\n"
+    
+    logger.info("Provided PhD Financial Aid Information.")
     return response.strip()
 
 def handle_research_opportunities(user_message):
@@ -208,23 +387,73 @@ def handle_advisor_contact(user_message):
         str: Advisor contact information response.
     """
     # Extract advisor type from the user message
-    advisor_type = extract_advisor_type(user_message)
-    if not advisor_type:
-        logger.warning("Advisor type not specified or unrecognized.")
-        return "Please specify whether you're looking for an Undergraduate or Graduate advisor."
+    # advisor_type = extract_advisor_type(user_message)
+    # if not advisor_type:
+    #     logger.warning("Advisor type not specified or unrecognized.")
+    #     return "Please specify whether you're looking for an Undergraduate or Graduate advisor."
 
     query = "SELECT program_name, contact_advisors FROM Program_Info"
     df = run_query(query)
     
     if df.empty:
-        logger.warning(f"No advisors found for advisor type: {advisor_type}.")
-        return f"I'm sorry, I couldn't find contact information for {advisor_type} advisors."
+        logger.warning(f"No advisors found.")
+        return f"I'm sorry, I couldn't find contact information for advisors."
 
-    response = f"{advisor_type} Academic Advisors:\n"
+    response = f"Academic Advisors:\n"
     for _, row in df.iterrows():
         response += f"{row['program_name']}: {row['contact_advisors']}\n\n"
     
-    logger.info(f"Provided Advisor Contact Information for {advisor_type} advisors.")
+    logger.info(f"Provided Advisor Contact Information for advisors.")
+    return response.strip()
+
+def handle_advisor_contact_bs(user_message):
+    """
+    Provides contact information for academic advisors based on advisor type.
+    
+    Args:
+        user_message (str): The user's message.
+    
+    Returns:
+        str: Advisor contact information response.
+    """
+
+    query = "SELECT contact_advisors FROM Program_Info WHERE program_ID = 1"
+    df = run_query(query)
+    
+    if df.empty:
+        logger.warning(f"No undergraduate advisors found.")
+        return f"I'm sorry, I couldn't find contact information for undergraduate advisors."
+
+    response = f"Undergraduate Advisors:\n"
+    for _, row in df.iterrows():
+        response += f"{row['contact_advisors']}\n\n"
+    
+    logger.info(f"Provided Undergraduate Advisor Contact Information.")
+    return response.strip()
+
+def handle_advisor_contact_ms(user_message):
+    """
+    Provides contact information for academic advisors based on advisor type.
+    
+    Args:
+        user_message (str): The user's message.
+    
+    Returns:
+        str: Advisor contact information response.
+    """
+
+    query = "SELECT contact_advisors FROM Program_Info WHERE program_ID = 2"    #program_ID 2 and 3 have the same advisor
+    df = run_query(query)
+    
+    if df.empty:
+        logger.warning(f"No graduate advisors found.")
+        return f"I'm sorry, I couldn't find contact information for graduate advisors."
+
+    response = f"Graduate Advisors:\n"
+    for _, row in df.iterrows():
+        response += f"{row['contact_advisors']}\n\n"
+    
+    logger.info(f"Provided Graduate Advisor Contact Information.")
     return response.strip()
 
 def handle_general_queries(user_message):
@@ -327,3 +556,6 @@ def extract_advisor_type(user_message):
         return "Graduate"
     else:
         return None
+
+#TODO: Cleanup prints
+#TODO: Add more intents

@@ -44,14 +44,47 @@ intents = {
         "admission details",
         "admissions details"
     ],
+    "AdmissionsAssistanceBS": [
+        "how do i apply to the software engineering bs program",
+        "apply for the bs program",
+        "apply for undergraduate program",
+        "apply for the undergraduate program",
+        "apply for the software engineering undergraduate",
+        "apply for the undergraduate"
+    ],
+    "AdmissionsAssistanceMS": [
+        "how do i apply to the software engineering ms program",
+        "apply for the ms program",
+        "apply for graduate program",
+        "apply for the graduate program",
+        "apply for the software engineering graduate",
+        "apply for the graduate",
+        "apply for the master"
+    ],
     "CurriculumDetails": [
-        "courses", "curriculum", "prerequisites", "electives", "planning guide",
+        "some courses", "prerequisites", "electives", "planning guide",
         "course details", "gened requirements", "technical electives", "course offerings",
         "degree requirements"
     ],
+    "CurriculumDetailsBS": [
+        "undergraduate courses", "undergraduate curriculum"
+    ],
+    "CurriculumDetailsMS": [
+        "graduate courses", "graduate curriculum"
+    ],
     "FinancialAid": [
-        "financial aid", "scholarships", "tuition assistance", "funding", "fellowships",
-        "grants", "financial support", "funding opportunities", "aid options"
+        "general financial aid", "some scholarships", "tuition assistance", "fafsa"
+    ],
+    "FinancialAidBS": [
+        "undergraduate financial aid", "undergraduate scholarships", "undergraduate tuition assistance", "merit scholarships",
+        "bs financial aid", "tuition awards", "scholarship universe"
+    ],
+    "FinancialAidMS": [
+        "ms financial aid", "masters financial aid", "masters scholarships", "masters assistantships", "masters assistantships",
+        "masters tuiton assistance"
+    ],
+    "FinancialAidPhD": [
+        "phd financial aid", "doctorate financial aid", "phs assistantships", "doctorate assistantship", "doctorate tuition assistance"
     ],
     "ResearchOpportunities": [
         "research areas", "faculty research", "thesis", "dissertation",
@@ -62,8 +95,7 @@ intents = {
         "career paths", "employment", "job market", "average salary", "career options"
     ],
     "UniversityResources": [
-        "career services", "student services", "advisor", "contact information",
-        "university resources", "support services", "academic advising", "student support"
+        "website", "software engineering website", "online", "resources", "websites"
     ],
     #"TransferCredits": [
     #    "transfer credits", "credit applicability", "transfer process",
@@ -71,7 +103,16 @@ intents = {
     #],
     "AdvisorContact": [
         "academic advisor", "contact advisor", "schedule meeting",
-        "advisor information", "get in touch with advisor", "advisor email", "advisor phone"
+        "get in touch with advisor", "advisor email", "advisor phone"
+    ],
+    "AdvisorContactUndergraduate": [
+        "undergraduate advisor", "contact undergraduate advisor", "bs advisor", "contact bs advisor",
+        "undergraduate advisor information", "bs advisor information"
+    ],
+    "AdvisorContactGraduate": [
+        "graduate advisor", "contact graduate advisor", "ms advisor", "contact ms advisor",
+        "phd advisor", "contact phd advisor", "graduate advisor information", "ms advisor information", 
+        "phd advisor information"
     ],
     "GeneralQueries": [
         "help", "technical issue", "not working", "error", "assistance",

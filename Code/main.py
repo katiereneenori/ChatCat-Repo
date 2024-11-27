@@ -12,16 +12,24 @@ from handlers import (
     handle_greeting,
     handle_program_information,
     handle_admissions_assistance,
+    handle_admissions_assistance_bs,
+    handle_admissions_assistance_ms,
     handle_curriculum_details,
+    handle_curriculum_details_bs,
+    handle_curriculum_details_ms,
     handle_financial_aid,
+    handle_financial_aid_bs,
+    handle_financial_aid_ms,
+    handle_financial_aid_phd,
     handle_research_opportunities,
     handle_career_opportunities,
     handle_university_resources,
     handle_advisor_contact,
+    handle_advisor_contact_bs,
+    handle_advisor_contact_ms,
     handle_general_queries,
     handle_unknown_intent,
-    handle_show_tables,
-    handle_get_table
+    handle_show_tables
 )
 from database import run_query, get_conn_cur  # Ensure database.py has necessary functions
 
@@ -146,65 +154,92 @@ def chat():
     conversation_state = get_conversation_state()
 
     # Check if we are awaiting specific information
-    if conversation_state.get("step") == "awaiting_program_selection":
-        program = extract_program(user_message)
-        if program:
-            response = provide_program_details(program)
-            conversation_state["step"] = "program_info_provided"
-        else:
-            response = "Please specify whether you're interested in the BS, MS, or PhD program."
-    elif conversation_state.get("step") == "awaiting_advisor_type":
-        advisor_type = extract_advisor_type(user_message)
-        if advisor_type:
-            response = provide_advisor_contact(advisor_type)
-            conversation_state["step"] = "advisor_info_provided"
-        else:
-            response = "Please specify whether you need contact information for undergraduate or graduate advisors."
+    # if conversation_state.get("step") == "awaiting_program_selection":
+    #     program = extract_program(user_message)
+    #     if program:
+    #         response = provide_program_details(program)
+    #         conversation_state["step"] = "program_info_provided"
+    #     else:
+    #         response = "Please specify whether you're interested in the BS, MS, or PhD program."
+    # elif conversation_state.get("step") == "awaiting_advisor_type":
+    #     advisor_type = extract_advisor_type(user_message)
+    #     if advisor_type:
+    #         response = provide_advisor_contact(advisor_type)
+    #         conversation_state["step"] = "advisor_info_provided"
+    #     else:
+    #         response = "Please specify whether you need contact information for undergraduate or graduate advisors."
+    # else:
+    # Recognize the intent
+    intent = recognize_intent(user_message)
+    logger.info(f"User Message: {user_message}")
+    logger.info(f"Recognized Intent: {intent}")
+    conversation_state["intent"] = intent  # Update intent in state
+
+    # Handle the intent
+    if intent == "Greeting":
+        response = handle_greeting(user_message)
+        conversation_state["step"] = "awaiting_response"
+    elif intent == "ProgramInformation":
+        response = handle_program_information(user_message)
+        conversation_state["step"] = "awaiting_program_selection"
+    elif intent == "AdmissionsAssistance":
+        response = handle_admissions_assistance(user_message)
+        conversation_state["step"] = "awaiting_program_selection"
+    elif intent == "AdmissionsAssistanceBS":
+        response = handle_admissions_assistance_bs(user_message)
+        conversation_state["step"] = "awaiting_program_selection"
+    elif intent == "AdmissionsAssistanceMS":
+        response = handle_admissions_assistance_ms(user_message)
+        conversation_state["step"] = "awaiting_program_selection"
+    elif intent == "CurriculumDetails":
+        response = handle_curriculum_details(user_message)
+        conversation_state["step"] = "awaiting_program_selection"
+    elif intent == "CurriculumDetailsBS":
+        response = handle_curriculum_details_bs(user_message)
+        conversation_state["step"] = "awaiting_program_selection"
+    elif intent == "CurriculumDetailsMS":
+        response = handle_curriculum_details_ms(user_message)
+        conversation_state["step"] = "awaiting_program_selection"
+    elif intent == "FinancialAid":
+        response = handle_financial_aid(user_message)
+        conversation_state["step"] = "provided_financial_aid_info"
+    elif intent == "FinancialAidBS":
+        response = handle_financial_aid_bs(user_message)
+        conversation_state["step"] = "provided_financial_aid_info"
+    elif intent == "FinancialAidMS":
+        response = handle_financial_aid_ms(user_message)
+        conversation_state["step"] = "provided_financial_aid_info"
+    elif intent == "FinancialAidPhD":
+        response = handle_financial_aid_phd(user_message)
+        conversation_state["step"] = "provided_financial_aid_info"
+    elif intent == "ResearchOpportunities":
+        response = handle_research_opportunities(user_message)
+        conversation_state["step"] = "awaiting_research_details"
+    elif intent == "CareerOpportunities":
+        response = handle_career_opportunities(user_message)
+        conversation_state["step"] = "awaiting_career_details"
+    elif intent == "UniversityResources":
+        response = handle_university_resources(user_message)
+        conversation_state["step"] = "awaiting_resource_selection"
+    elif intent == "AdvisorContact":
+        response = handle_advisor_contact(user_message)
+        conversation_state["step"] = "awaiting_advisor_type"
+    elif intent == "AdvisorContactUndergraduate":
+        response = handle_advisor_contact_bs(user_message)
+        conversation_state["step"] = "awaiting_advisor_type"
+    elif intent == "AdvisorContactGraduate":
+        response = handle_advisor_contact_ms(user_message)
+        conversation_state["step"] = "awaiting_advisor_type"
+    elif intent == "ShowTables":
+        response = handle_show_tables()
+    elif intent == "GeneralQueries":
+        response = handle_general_queries(user_message)
+        conversation_state["step"] = "awaiting_general_query"
     else:
-        # Recognize the intent
-        intent = recognize_intent(user_message)
-        logger.info(f"User Message: {user_message}")
-        logger.info(f"Recognized Intent: {intent}")
-        conversation_state["intent"] = intent  # Update intent in state
+        response = handle_unknown_intent(user_message)
+        conversation_state["step"] = "unknown_intent"
 
-        # Handle the intent
-        if intent == "Greeting":
-            response = handle_greeting(user_message)
-            conversation_state["step"] = "awaiting_response"
-        elif intent == "ProgramInformation":
-            response = handle_program_information(user_message)
-            conversation_state["step"] = "awaiting_program_selection"
-        elif intent == "AdmissionsAssistance":
-            response = handle_admissions_assistance(user_message)
-            conversation_state["step"] = "awaiting_program_selection"
-        elif intent == "CurriculumDetails":
-            response = handle_curriculum_details(user_message)
-            conversation_state["step"] = "awaiting_program_selection"
-        elif intent == "FinancialAid":
-            response = handle_financial_aid(user_message)
-            conversation_state["step"] = "provided_financial_aid_info"
-        elif intent == "ResearchOpportunities":
-            response = handle_research_opportunities(user_message)
-            conversation_state["step"] = "awaiting_research_details"
-        elif intent == "CareerOpportunities":
-            response = handle_career_opportunities(user_message)
-            conversation_state["step"] = "awaiting_career_details"
-        elif intent == "UniversityResources":
-            response = handle_university_resources(user_message)
-            conversation_state["step"] = "awaiting_resource_selection"
-        elif intent == "AdvisorContact":
-            response = handle_advisor_contact(user_message)
-            conversation_state["step"] = "awaiting_advisor_type"
-        elif intent == "ShowTables":
-            response = handle_show_tables()
-        elif intent == "GeneralQueries":
-            response = handle_general_queries(user_message)
-            conversation_state["step"] = "awaiting_general_query"
-        else:
-            response = handle_unknown_intent(user_message)
-            conversation_state["step"] = "unknown_intent"
-
-        logger.info(f"Response: {response}")
+    logger.info(f"Response: {response}")
 
     # Update conversation state in memory
     set_conversation_state(conversation_state)

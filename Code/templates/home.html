@@ -59,10 +59,10 @@
                 const chatHistory = document.getElementById("chatHistory");
                 const userDiv = document.createElement("div");
                 userDiv.className = "user-message";
-                userDiv.innerText = "You: " + message;
+                userDiv.innerText = "You:\n" + message;
                 const botDiv = document.createElement("div");
                 botDiv.className = "bot-response";
-                botDiv.innerHTML = "ChatCat: " + data.response.replace(/\n/g, "<br>");
+                botDiv.innerHTML = "ChatCat:<br>" + data.response.replace(/\n/g, "<br>");
                 chatHistory.appendChild(userDiv);
                 chatHistory.appendChild(botDiv);
 
