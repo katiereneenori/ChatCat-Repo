@@ -140,7 +140,7 @@ Run the Application:
 You should see output indicating that the Flask server is running, e.g.:
   * Running on http://0.0.0.0:5001/ (Press CTRL+C to quit)
 
-## Access the Application:
+Access the Application:
   Open your web browser and navigate to the IP address and port where the Flask app is running. If running locally, go to:
   http://127.0.0.1:5001/
   Or use the IP address provided in the terminal output.
