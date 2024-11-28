@@ -1,4 +1,8 @@
 # ChatCat - University of Arizona Virtual Assistant
+# Team 9
+# SFWE403 
+# Fall, 2024
+# Professor ONeal
 
 **ChatCat** is a Flask-based web application designed to serve as a virtual assistant for the University of Arizona's Software Engineering program. 
 It provides users with information about programs, admissions, curriculum, financial aid, research opportunities, career prospects, 
