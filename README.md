@@ -103,16 +103,12 @@ ChatCat/
 - **`templates/table.html`**
   - HTML template for viewing database tables, displaying table contents based on user input.
 
-- **`requirements.txt`**
-  - Lists all Python dependencies required to run the application. (See [Installation](#installation) for more details.)
-
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
 
 - **Operating System:** Windows, macOS, or Linux.
 - **Python:** Python 3.7 or higher installed. [Download Python](https://www.python.org/downloads/)
-- **MySQL Database:** Access to a MySQL database with the required tables and data.
 - **pip:** Python package manager installed. It typically comes with Python.
 
 ### Install Dependencies
