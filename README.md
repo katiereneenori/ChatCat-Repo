@@ -14,7 +14,6 @@ and more through an interactive chatbot interface. Additionally, it offers funct
 - [Configuration](#configuration)
 - [Running the Application](#running-the-application)
 - [Usage](#usage)
-- [Building/Recreating the Executable](#buildingrecreating-the-executable)
 - [License](#license)
 - [Contact](#contact)
 
