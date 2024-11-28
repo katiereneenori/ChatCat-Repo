@@ -11,7 +11,6 @@ and more through an interactive chatbot interface. Additionally, it offers funct
 - [Project Structure](#project-structure)
 - [Description of Each File](#description-of-each-file)
 - [Prerequisites](#prerequisites)
-- [Installation](#installation)
 - [Configuration](#configuration)
 - [Running the Application](#running-the-application)
 - [Usage](#usage)
