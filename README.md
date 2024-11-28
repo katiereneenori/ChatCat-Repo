@@ -146,7 +146,7 @@ You should see output indicating that the Flask server is running, e.g.:
   http://127.0.0.1:5001/
   Or use the IP address provided in the terminal output.
 
-### Usage
+## Usage
 Chat with ChatCat
   On the home page, interact with the chatbot by typing your queries related to software engineering programs, admissions, curriculum, etc.
   Press the 'Send' button or hit 'Enter' to submit your message.
